@@ -1,0 +1,12 @@
+{
+  "name": "payam_sima",
+  "version": "1.0.0",
+  "description": "",
+  "main": "waypoints-challenge.js",
+  "scripts": {
+    "start": "node waypoints-challenge.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
