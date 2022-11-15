@@ -12,97 +12,89 @@ function distance(pos1, pos2) {
   return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
 }
 
-const waypointsCalc = (waypointsArray) => {
-  let returnedObj = {
+const waypointsCalc = (points) => {
+  const initialCalculatedData = {
     speedDistance: 0,
     speedTime: 0,
     totalTime: 0,
     totalDistance: 0,
   };
 
-  if (waypointsArray.length < 2) return returnedObj;
+  if (points.length < 2) return initialCalculatedData;
 
-  for (let i = 1; i < waypointsArray.length; i++) {
-    const oldReturnedObj = { ...returnedObj };
-
-    const firstPoint = waypointsArray[i - 1];
-    const secondPoint = waypointsArray[i];
-
-    const distanceInKm = distance(firstPoint.position, secondPoint.position);
-
-    const timeDiff =
-      (new Date(secondPoint.timestamp) - new Date(firstPoint.timestamp)) / 1000;
-
-    if (timeDiff < 0) {
-      console.log("WARNING!");
-      return;
+  const calculatedData = points.reduce((acc, curr, index, points) => {
+    if (index === 0) {
+      return acc;
     }
 
-    const isSpeeding = secondPoint.speed_limit < secondPoint.speed;
+    const prev = points[index - 1];
 
-    returnedObj = {
+    const timeDiff =
+      (new Date(curr.timestamp) - new Date(prev.timestamp)) / 1000;
+
+    const distanceInKm = distance(prev.position, curr.position);
+
+    const isSpeeding = curr.speed_limit < curr.speed;
+
+    return {
       speedDistance: isSpeeding
-        ? oldReturnedObj.speedDistance + distanceInKm
-        : oldReturnedObj.speedDistance,
-      speedTime: isSpeeding
-        ? oldReturnedObj.speedTime + timeDiff
-        : oldReturnedObj.speedTime,
-      totalTime: oldReturnedObj.totalTime + timeDiff,
-      totalDistance: oldReturnedObj.totalDistance + distanceInKm,
+        ? acc.speedDistance + distanceInKm
+        : acc.speedDistance,
+      speedTime: isSpeeding ? acc.speedTime + timeDiff : acc.speedTime,
+      totalTime: acc.totalTime + timeDiff,
+      totalDistance: acc.totalDistance + distanceInKm,
     };
-  }
+  }, initialCalculatedData);
 
- //console.log(returnedObj);
- // return returnedObj;
+  return calculatedData;
 };
 
-waypointsCalc([
-  {
-    timestamp: "2016-06-21T12:00:00.000Z",
-    position: {
-      latitude: 59.334,
-      longitude: 18.0667,
+console.log(
+  waypointsCalc([
+    {
+      timestamp: "2016-06-21T12:00:00.000Z",
+      position: {
+        latitude: 59.334,
+        longitude: 18.0667,
+      },
+      speed: 6.3889,
+      speed_limit: 8.33,
     },
-    speed: 6.3889,
-    speed_limit: 8.33,
-  },
-  {
-    timestamp: "2016-06-21T12:00:05.000Z",
-    position: {
-      latitude: 59.3337,
-      longitude: 18.0662,
+    {
+      timestamp: "2016-06-21T12:00:05.000Z",
+      position: {
+        latitude: 59.3337,
+        longitude: 18.0662,
+      },
+      speed: 9.4,
+      speed_limit: 8.33,
     },
-    speed: 9.4,
-    speed_limit: 8.33,
-  },
-  {
-    timestamp: "2016-06-21T12:00:10.000Z",
-    position: {
-      latitude: 59.3331,
-      longitude: 18.0664,
+    {
+      timestamp: "2016-06-21T12:00:10.000Z",
+      position: {
+        latitude: 59.3331,
+        longitude: 18.0664,
+      },
+      speed: 11.1,
+      speed_limit: 8.33,
     },
-    speed: 11.1,
-    speed_limit: 8.33,
-  },
-  {
-    timestamp: "2016-06-21T12:00:15.000Z",
-    position: {
-      latitude: 59.3327,
-      longitude: 18.0665,
+    {
+      timestamp: "2016-06-21T12:00:15.000Z",
+      position: {
+        latitude: 59.3327,
+        longitude: 18.0665,
+      },
+      speed: 8.32,
+      speed_limit: 8.33,
     },
-    speed: 8.32,
-    speed_limit: 8.33,
-  },
-  {
-    timestamp: "2016-06-21T12:00:20.000Z",
-    position: {
-      latitude: 59.3323,
-      longitude: 18.0666,
+    {
+      timestamp: "2016-06-21T12:00:20.000Z",
+      position: {
+        latitude: 59.3323,
+        longitude: 18.0666,
+      },
+      speed: 8.33,
+      speed_limit: 8.33,
     },
-    speed: 8.33,
-    speed_limit: 8.33,
-  },
-]);
-module.exports = waypointsCalc
-//distance 
-  //, }
+  ])
+);
