@@ -52,8 +52,8 @@ const waypointsCalc = (waypointsArray) => {
     };
   }
 
-  console.log(returnedObj);
-  return returnedObj;
+ //console.log(returnedObj);
+ // return returnedObj;
 };
 
 waypointsCalc([
@@ -103,3 +103,6 @@ waypointsCalc([
     speed_limit: 8.33,
   },
 ]);
+module.exports = waypointsCalc
+//distance 
+  //, }
