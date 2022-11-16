@@ -55,3 +55,4 @@ const waypointsCalc = (points) => {
 
 console.log(
   waypointsCalc(waypointsArr));
+  module.exports = waypointsCalc
